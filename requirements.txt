@@ -2,3 +2,4 @@ tqdm
 pandas
 beautifulsoup4
 streamlit
+st-annotated-text

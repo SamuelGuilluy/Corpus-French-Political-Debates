@@ -93,6 +93,8 @@ def extract_conversation(soup):
 
 def extract_conversation_pour_annotation(soup):
     """ Extract the conversation from the integral text"""
+    for e in soup.findAll('br'):
+        e.extract()
     Texte_Integral = soup.find("span" ,{"class":"clearfix text-formatted field field--name-field-texte-integral field--type-text-long field--label-hidden field__item"})
     tab_with_out_br = []
     actual_string = ""
@@ -107,7 +109,7 @@ def extract_conversation_pour_annotation(soup):
             #print('\n')
             tab_with_out_br.append(actual_string)
             actual_string = ""
-            
+    tab_with_out_br.append(actual_string)
     return tab_with_out_br
 
 

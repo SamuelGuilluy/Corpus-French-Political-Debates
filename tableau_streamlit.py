@@ -7,7 +7,7 @@ from urllib.error import URLError
 from data.list_debat import liste_debates, dict_annotated_debates
 
 from annotated_text import annotated_text
-
+from scripts.data_analysis.convert_annotated_to_tuple import construct_the_list_of_annotated_tuple
 
 try:
     st.markdown("# Analyse des débats d'entre deux tours de l'élections présidentielles")
@@ -17,29 +17,26 @@ try:
     with st.sidebar:
         st.markdown("## Choix du débat")
 
-        
-        debat = st.selectbox(
-            "Choose the annotated debate", dict_annotated_debates
-        )
+        kind_of_data = st.radio(
+            "Select the type of data to show",
+            ("Annotated data", "all the data"))
 
-        debat = st.selectbox(
-            "Choose the debate", liste_debates
-        )
+        if (kind_of_data == "Annotated data"):
+            debat = st.selectbox(
+                "Choose the annotated debate", dict_annotated_debates
+            )
+        else:
+            debat = st.selectbox(
+                "Choose the debate", liste_debates
+            )
     
-    object_list = ["This ",
-        ("is", "verb"),
-        " some ",
-        ("annotated", "adj"),
-        ("text", "noun"),
-        " for those of ",
-        ("you", "pronoun"),
-        " who ",
-        ("like", "verb"),
-        " this sort of ",
-        ("thing", "noun"),
-        "."]
-    
-    annotated_text(*object)
+    path_directory = "data/annotated_data/"
+    object_list = construct_the_list_of_annotated_tuple(dict_annotated_debates[debat]["path"], path_directory)
+    # print(object_list)
+
+    for i in range(20):
+        annotated_text(*object_list[50+i])
+        st.markdown("\n")
        
 
 

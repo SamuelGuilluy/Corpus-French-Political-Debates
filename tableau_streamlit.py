@@ -27,7 +27,7 @@ try:
 
         kind_of_data = st.radio(
             "Choisissez le type de débat à explorer",
-            ("Données annotées", "Tous les débats d'entre deux tours"))
+            ("Recherche par mots clés","Données annotées", "Tous les débats d'entre deux tours"))
 
         if (kind_of_data == "Données annotées"):
             debat = st.selectbox(
@@ -40,7 +40,55 @@ try:
         
         topics = st.multiselect("Sélectionné les sujets d'intérêts", options=["Economie","Opinion","Politique","Societe","Culture","Sport","Environement","Technologie","Education","Justice"])
     # print(kind_of_data)
-    if (kind_of_data == "Données annotées"):
+
+    if(kind_of_data == "Recherche par mots clés"):
+        # search bar
+        query = st.text_input("Cherchez des arguments sur le sujet de votre choix!", "")
+        st.markdown(query)
+
+        ## On ittère sur tous les débats annotés
+        for debat in dict_annotated_debates:
+            st.markdown("### " + debat)
+
+            path_directory = "./data/preprocessed_data/"
+            file_name = dict_annotated_debates[debat]["path"]
+            with open("./data/preprocessed_data/" + file_name[:-6] + "_" + "output_dict", "rb") as fp:   # Unpickling
+                dict_output = pickle.load(fp)
+
+                for topic in topics:
+                    is_there_any_graph = False
+                    st.markdown("### " + topic )
+                    list_debat = dict_output[topic]["debate"]
+                    list_graph = dict_output[topic]["graph"]
+
+                    # print(list_debat)
+                    # print(list_graph)
+                    for debat_text, graph in zip(list_debat,list_graph):
+                        # print(debat_text)
+                        # print(graph)
+                        # st.markdown(debat_text)
+                        for ele_list in debat_text:
+                            graph = graphviz.Digraph()
+                            if(len(ele_list)>1):
+                                st.markdown(ele_list)
+                        break
+                    
+                        # if(len(ele_tuple) ==2):
+                        
+                        for ele in ele_list:
+                            print(ele)
+                            # if(our_word_in_the_text(query, ele)):
+                                # graph.edge(*values)
+                                # st.graphviz_chart(graph)
+                        break
+
+
+                    if(is_there_any_graph == False):
+                        st.markdown("Ce sujet n'a pas été débatu.")
+                    break
+
+
+    elif (kind_of_data == "Données annotées"):
 
         list_path_person = dict_annotated_debates[debat]["path_images"]
         path_to_text = "./data/text/"
@@ -63,13 +111,13 @@ try:
         path_directory = "./data/preprocessed_data/"
         file_name = dict_annotated_debates[debat]["path"]
         with open("./data/preprocessed_data/" + file_name[:-6] + "_" + "output_dict", "rb") as fp:   # Unpickling
-            dict_output = pickle.load(fp)
+            dict_output = pickle.load(fp)        
         
         for topic in topics:
             dict_du_topic = dict_output[topic]
             st.markdown("## "+ topic)
 
-            num_of_element_to_show = st.slider("Choose how many elemnts to show",0,200, 20)
+            num_of_element_to_show = st.slider("Choose how many elements to show",0,200, 20)
             num_element = min(num_of_element_to_show,len(dict_du_topic["graph"]),len(dict_du_topic["debate"]))
             
             is_there_any_graph = False

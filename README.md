@@ -2,13 +2,19 @@
 
 ## Data Analysis of the political debates
 
-The library used to implement the visual aspect of the site is streamlit. A description of its use can be found at the following link: - https://streamlit.i
+The library used to implement the visual aspect of the site is streamlit. A description of its use can be found at the following link: - https://streamlit.io
 
 The main file used to run the site is "tableau_streamlit.py".
 
 You can launch the site with the command :
 
 > streamlit run .\tableau_streamlit.py
+
+## TO-DO
+
+- [ ] Ajouter une recherche par sujet
+- [ ] Comparaison des différents candidats de manière global
+
 
 ## Annotate the data
 

@@ -10,12 +10,24 @@ You can launch the site with the command :
 
 > streamlit run .\tableau_streamlit.py
 
-## TO-DO
+## Fonctionalités 
 
-- [ ] Ajouter une recherche par sujet
-- [ ] Comparaison des différents candidats de manière global
+### Terminé
 
+- [x] Faire la présentation "WordCloud" des candidats --> comment le présenter ? faire une carte d'identité des candidats comme sur l'autre site ?
 
+### En cours
+
+- [ ] Ajouter une recherche par sujet en entrant une phrase : on renvoit tous les extraits parlant de ce sujet
+
+### TO DO
+
+- [ ] Ajouter les onglets d'explications de qu'est ce qu'un argument dans notre cas
+- [ ] Ajouter les pages de présentations des modèles utilisés et aussi un lien vers un article
+- [ ] Utiliser l'outil speech to text streamlit ? (ne semble pas marcher avec l'ordi du boulot)
+- [ ] Utiliser d'autres méthodes d'identification d'arguments ? Revoir les modèles des étudiants + ajouter le modèle développé soit même
+
+<!-- 
 ## Annotate the data
 
 - To download the prodigy package, use the command : 
@@ -40,4 +52,4 @@ The command to compare annotations in datasets dataset_1 and dataset_2 is :
 
 ### Export the annotations :
 
-> python -m prodigy db-out macron_lepen | Out-File ./annotation_demonstrateur.jsonl -encoding ASCII
+> python -m prodigy db-out macron_lepen | Out-File ./annotation_demonstrateur.jsonl -encoding ASCII -->

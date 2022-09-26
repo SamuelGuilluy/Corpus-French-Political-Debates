@@ -154,7 +154,7 @@ try:
             with col1:
                 st.markdown("<h3 style='text-align: center; color: black;'> Identification du sujet du débat. <h3>",unsafe_allow_html=True)
 
-                st.image("./data/images/architecture_topic_identification.png")
+                st.image("./data/images/topic.png")
                 st.markdown("<h5 style='text-align: center; color: black;'>Architecture du modèle d'identification des sujets.<h5>",unsafe_allow_html=True)
                 
                 st.markdown("#### Schéma d'annotation.")
@@ -183,7 +183,7 @@ try:
             with col2:
                 st.markdown("<h3 style='text-align: center; color: black;'> Identification des arguments.<h3>",unsafe_allow_html=True)
             
-                st.image("./data/images/architecture_argument_identification.png")
+                st.image("./data/images/argument.png")
                 st.markdown("<h5 style='text-align: center; color: black;'>Architecture du modèle d'identification des arguments.<h5>",unsafe_allow_html=True)
                 
                 st.markdown("L'objectif du modèle est d'exploiter la structure syntaxique de la phrase afin d'avoir une segmentation des composants argumentaires cohérente avec la syntaxe de la phrase.")

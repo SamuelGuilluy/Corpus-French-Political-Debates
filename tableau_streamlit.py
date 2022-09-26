@@ -17,13 +17,14 @@ from data.list_debat import dict_liste_debats, dict_annotated_debates
 from annotated_text import annotated_text
 
 import matplotlib.pyplot as plt
-
+import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
-os.system("nltk.download('stopwords')")
+nltk.download('stopwords')
 
 try:
+    
     st.set_page_config(layout="wide")
     st.markdown("<h1 style='text-align: center; color: black;'>Analyse des débats d'entre deux tours des élections présidentielles françaises.</h1>", unsafe_allow_html=True)
     

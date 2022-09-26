@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-# nltk.download('stopwords')
+nltk.download('stopwords')
 
 
 try:

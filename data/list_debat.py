@@ -34,7 +34,8 @@ dict_liste_debats = {
 dict_annotated_debates = {
     "Hollande Sarkozy Antoine" : {
         "path":"hollande_sarkozy_antoine.jsonl",
-        "path_images":["hollande.jpg","sarkozy.jpg"]
+        "path_images":["hollande.jpg","sarkozy.jpg"],
+        "name_intervenant":["Mme Le Pen","M. Macron"]
         },
     "Hollande Sarkozy Matthieu" : {
         "path":"hollande_sarkozy_matthieu.jsonl",
@@ -42,6 +43,7 @@ dict_annotated_debates = {
         },
     "Macron Lepen Charles" : {
         "path":"macron_lepen_charles.jsonl",
-        "path_images":["macron.jpg","lepen.png"]
+        "path_images":["macron.jpg","lepen.png"],
+        "name_intervenant":["M. Macron","Mme Le Pen"]
         }
 }

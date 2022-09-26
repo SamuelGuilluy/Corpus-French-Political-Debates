@@ -18,6 +18,11 @@ from annotated_text import annotated_text
 
 import matplotlib.pyplot as plt
 
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+# nltk.download('stopwords')
+
+
 try:
     st.set_page_config(layout="wide")
     st.markdown("<h1 style='text-align: center; color: black;'>Analyse des débats d'entre deux tours des élections présidentielles françaises.</h1>", unsafe_allow_html=True)
@@ -29,14 +34,21 @@ try:
             "Choisissez le type de débat à explorer", ["Explication du modèle","Données pré-traîtés"])# "Tous les débats d'entre deux tours")) #"Recherche par mots clés",
 
         if (kind_of_data == "Données pré-traîtés"):
-            debat = st.selectbox(
-                "Choisissez un débat à analyser", dict_annotated_debates
+            debat_int = st.selectbox(
+                "Choisissez un débat à analyser", ["Macron vs LePen - 2017"] #"Hollande vs Sarkozy - 2012",
             )
+            
+            relation_name = {
+                "Hollande vs Sarkozy - 2012":"Hollande Sarkozy Antoine",
+                "Macron vs LePen - 2017":"Macron Lepen Charles"
+            }
+            debat = relation_name[debat_int]
           
         elif(kind_of_data == "Tous les débats d'entre deux tours"):
             debat = st.selectbox(
                 "Choisisser un débat à analyser", dict_liste_debats
             )
+
         
         
     if(kind_of_data == "Recherche par mots clés"):
@@ -97,7 +109,7 @@ try:
             with col1_simple:
                 st.write("")
             with col2_simple:
-                st.image("./data/images/meta_model.PNG")
+                st.image("./data/images/meta_model.png")
                 st.markdown("<h5 style='text-align: center; color: black;'>Méta modèle du schéma de données.<h5>",unsafe_allow_html=True)
             with col3_simple:
                 st.write("")
@@ -140,7 +152,7 @@ try:
             with col1:
                 st.markdown("<h3 style='text-align: center; color: black;'> Identification du sujet du débat. <h3>",unsafe_allow_html=True)
 
-                st.image("./data/images/architecture_topic_identification.PNG")
+                st.image("./data/images/architecture_topic_identification.png")
                 st.markdown("<h5 style='text-align: center; color: black;'>Architecture du modèle d'identification des sujets.<h5>",unsafe_allow_html=True)
                 
                 st.markdown("#### Schéma d'annotation.")
@@ -169,7 +181,7 @@ try:
             with col2:
                 st.markdown("<h3 style='text-align: center; color: black;'> Identification des arguments.<h3>",unsafe_allow_html=True)
             
-                st.image("./data/images/architecture_argument_identification.PNG")
+                st.image("./data/images/architecture_argument_identification.png")
                 st.markdown("<h5 style='text-align: center; color: black;'>Architecture du modèle d'identification des arguments.<h5>",unsafe_allow_html=True)
                 
                 st.markdown("L'objectif du modèle est d'exploiter la structure syntaxique de la phrase afin d'avoir une segmentation des composants argumentaires cohérente avec la syntaxe de la phrase.")
@@ -187,16 +199,21 @@ try:
         with col2:
             st.markdown("<h2 style='text-align: center; color: black;'>Graphes Argumentifs du débat.</h1>", unsafe_allow_html=True)
     
+            final_stopwords_list = stopwords.words('english') + stopwords.words('french')
 
             path_directory = "./data/preprocessed_data/"
             file_name = dict_annotated_debates[debat]["path"]
+
+            names_intervenant = dict_annotated_debates[debat]["name_intervenant"]
+
             with open("./data/preprocessed_data/" + file_name[:-6] + "_" + "output_dict", "rb") as fp:   # Unpickling
                 dict_output = pickle.load(fp)  
 
             num_of_element_to_show = st.slider("Sélectionne le nombre de paragraphe à analyser.",0,50, 10)
             
-            topics = st.multiselect("Sélectionné les sujets d'intérêts", options=["Economie","Opinion","Politique","Societe","Culture","Sport","Environement","Technologie","Education","Justice"])
-
+            topics = st.multiselect("Sélectionné les sujets d'intérêts", options=["Economie","Opinion","Politique","Societe","Culture","Sport","Environement","Technologie","Education","Justice"],default="Economie")
+            list_word_to_use  = [["Politique"],["Politique"]]
+            indice_extrait = 1
             for topic in topics:
                 dict_du_topic = dict_output[topic]
                 st.markdown("## "+ topic)
@@ -204,17 +221,34 @@ try:
 
                 is_there_any_graph = False
                 for i in range(num_element):
-                    with st.expander(label = 'Extrait du débat n°' + str(i+1), expanded=True):
+                    with st.expander(label = 'Extrait du débat n°' + str(indice_extrait), expanded=True):
                         if(len(list(dict_du_topic["graph"][i].keys())) != 0):
+                            indice_extrait += 1 
                             is_there_any_graph = True
                             
                             annotated_text(*dict_du_topic["debate"][i])
+                            
+                            text_tokens_element = [word_tokenize(ele[0]) for ele in dict_du_topic["debate"][i]]
+                            tokens_without_sw = [word for word in text_tokens_element if not word in stopwords.words()]
+                            text = (" ").join([word.replace("\x92","") for list_word in tokens_without_sw for word in list_word ])
+                            
+
+                            if(dict_du_topic["debate"][i][0][:len(names_intervenant[0])] == names_intervenant[0]):
+                                list_word_to_use[0].append(text)
+                            elif(dict_du_topic["debate"][i][0][:len(names_intervenant[1])] == names_intervenant[1]):
+                                list_word_to_use[1].append(text)
+
                             # Create a graphlib graph object
                             graph = graphviz.Digraph()
                             # print(dict_du_topic["graph"][i])
                             for key, values in dict_du_topic["graph"][i].items():
                                 graph.edge(*values)
                             st.graphviz_chart(graph)
+
+                                                
+                
+                # text_tokens_element = word_tokenize(text)
+                # tokens_without_sw = [word for word in text_tokens if not word in stopwords.words()]
 
                             
         with col1: 
@@ -226,24 +260,27 @@ try:
             path_to_text = "./data/text/"
             path_to_image = "./data/images/"
             list_to_show = []
-            for personne_image in list_path_person:
-                text = open(path_to_text + 'examples_wiki_rainbow.txt', encoding="utf-8").read()
+            for (i,personne_image) in enumerate(list_path_person):
+                text = (" ").join(list_word_to_use[i])
+                print(list_word_to_use[i])
                 melenchon_color = np.array(Image.open(os.path.join(path_to_image, personne_image)))
                 melenchon_mask = melenchon_color.copy()
                 wc = WordCloud(max_words=250, mask=melenchon_mask, background_color="white")
                 wc.generate(text)
                 image_colors = ImageColorGenerator(melenchon_color)
                 wc.recolor(color_func=image_colors)
-                list_to_show.append([wc,personne_image])
+                list_to_show.append([wc,personne_image,melenchon_color])
 
             fig, ax = plt.subplots(nrows=2, ncols=1,figsize = (22, 22))
             plt.subplot(211)
             ax[0] = plt.imshow(list_to_show[0][0], interpolation="bilinear")
+            ax[0] = plt.imshow(list_to_show[0][2], alpha=0.4)
             plt.axis('off')
             plt.title(list_to_show[0][1][:-4].capitalize(),loc="center", fontsize=20)
             # plt.figure(figsize = (10, 10))
             plt.subplot(212)
             ax[1] = plt.imshow(list_to_show[1][0], interpolation="bilinear")
+            ax[0] = plt.imshow(list_to_show[1][2], alpha=0.4)
             plt.axis('off')
             # plt.figure(figsize = (10, 10))
             plt.title(list_to_show[1][1][:-4].capitalize(),loc="center", fontsize=20)

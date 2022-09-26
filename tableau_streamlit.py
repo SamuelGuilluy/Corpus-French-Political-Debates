@@ -20,8 +20,8 @@ import matplotlib.pyplot as plt
 
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-nltk.download('stopwords')
 
+os.system("nltk.download('stopwords')")
 
 try:
     st.set_page_config(layout="wide")
